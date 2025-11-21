@@ -11,10 +11,12 @@ const RosenbrockChart = (props: {
   width: number;
   height: number;
   x: number[][];
+  initial: number[];
   handleChangeInitial: (x: number, y: number) => void;
   handleMoveInitial: (x: number, y: number) => void;
 }) => {
-  const { width, height, x, handleChangeInitial, handleMoveInitial } = props;
+  const { width, height, x, initial, handleChangeInitial, handleMoveInitial } =
+    props;
   const xScale = scaleLinear().domain([-5, 5]).range([0, width]);
   const yScale = scaleLinear().domain([-5, 5]).range([height, 0]);
 
@@ -57,9 +59,23 @@ const RosenbrockChart = (props: {
         className={"fill-none stroke-amber-500 stroke-2 opacity-40"}
       />
       <circle
+        cx={xScale(initial[0])}
+        cy={yScale(initial[1])}
+        r={8}
+        className="fill-neutral-500 stroke-neutral-700 opacity-20"
+      />
+      <circle
+        cx={xScale(x.at(0)![0])}
+        cy={yScale(x.at(0)![1])}
+        r={8}
+        className="fill-amber-900 stroke-amber-400"
+        fillOpacity={0.7}
+      />
+      <circle
         cx={xScale(x.at(-1)![0])}
         cy={yScale(x.at(-1)![1])}
         r={8}
+        fillOpacity={0.7}
         className="fill-amber-500 stroke-amber-700"
       />
     </svg>

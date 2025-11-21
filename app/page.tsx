@@ -45,6 +45,7 @@ export default function Home() {
             width={width}
             height={height}
             x={x}
+            initial={initial}
             handleChangeInitial={handleChangeInitial}
             handleMoveInitial={handleMoveInitial}
           />

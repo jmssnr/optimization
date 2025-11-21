@@ -2,6 +2,7 @@
 
 import ObjectiveContour from "@/components/chart/objective-contour";
 import { rosenbrock } from "@/core/test-functions/rosenbrock";
+import { Var } from "@/core/variable";
 import { extent, range } from "d3-array";
 import { scaleLinear, scaleSequentialLog } from "d3-scale";
 import { interpolateYlGnBu } from "d3-scale-chromatic";
@@ -30,55 +31,72 @@ const RosenbrockChart = (props: {
   const path = line<number[]>()
     .x((d, i) => xScale(d[0]))
     .y((d) => yScale(d[1]));
+
   return (
-    <svg
-      width={width}
-      height={height}
-      className="border rounded-md"
-      onMouseMove={(event) => {
-        const { left, top } = event.currentTarget.getBoundingClientRect();
-        const x = xScale.invert(event.clientX - left);
-        const y = yScale.invert(event.clientY - top);
-        handleMoveInitial(x, y);
-      }}
-      onClick={(event) => {
-        const { left, top } = event.currentTarget.getBoundingClientRect();
-        const x = xScale.invert(event.clientX - left);
-        const y = yScale.invert(event.clientY - top);
-        handleChangeInitial(x, y);
-      }}
-    >
-      <ObjectiveContour
-        xScale={xScale}
-        yScale={yScale}
-        colorScale={colorScale}
-        fun={rosenbrock}
-      />
-      <path
-        d={path(x) ?? ""}
-        className={"fill-none stroke-amber-500 stroke-2 opacity-40"}
-      />
-      <circle
-        cx={xScale(initial[0])}
-        cy={yScale(initial[1])}
-        r={8}
-        className="fill-neutral-500 stroke-neutral-700 opacity-20"
-      />
-      <circle
-        cx={xScale(x.at(0)![0])}
-        cy={yScale(x.at(0)![1])}
-        r={8}
-        className="fill-transparent stroke-amber-500"
-        fillOpacity={0.7}
-      />
-      <circle
-        cx={xScale(x.at(-1)![0])}
-        cy={yScale(x.at(-1)![1])}
-        r={8}
-        fillOpacity={0.7}
-        className="fill-amber-500 stroke-amber-700"
-      />
-    </svg>
+    <div className="flex flex-col gap-2">
+      <svg
+        width={width}
+        height={height}
+        className="border rounded-md"
+        onMouseMove={(event) => {
+          const { left, top } = event.currentTarget.getBoundingClientRect();
+          const x = xScale.invert(event.clientX - left);
+          const y = yScale.invert(event.clientY - top);
+          handleMoveInitial(x, y);
+        }}
+        onClick={(event) => {
+          const { left, top } = event.currentTarget.getBoundingClientRect();
+          const x = xScale.invert(event.clientX - left);
+          const y = yScale.invert(event.clientY - top);
+          handleChangeInitial(x, y);
+        }}
+      >
+        <ObjectiveContour
+          xScale={xScale}
+          yScale={yScale}
+          colorScale={colorScale}
+          fun={rosenbrock}
+        />
+        <path
+          d={path(x) ?? ""}
+          className={"fill-none stroke-chart-1 stroke-2 opacity-40"}
+        />
+        <circle
+          cx={xScale(initial[0])}
+          cy={yScale(initial[1])}
+          r={8}
+          className="fill-neutral-500 stroke-neutral-700 opacity-20"
+        />
+        <circle
+          cx={xScale(1)}
+          cy={yScale(1)}
+          r={5}
+          className="fill-chart-2 stroke-chart-2"
+          fillOpacity={0.5}
+        />
+        <circle
+          cx={xScale(x.at(0)![0])}
+          cy={yScale(x.at(0)![1])}
+          r={5}
+          className="fill-chart-1 stroke-amber-500"
+          fillOpacity={0.7}
+        />
+
+        <circle
+          cx={xScale(x.at(-1)![0])}
+          cy={yScale(x.at(-1)![1])}
+          r={10}
+          fillOpacity={0.5}
+          className="fill-chart-1 stroke-chart-1"
+        />
+        <circle
+          cx={xScale(x.at(-1)![0])}
+          cy={yScale(x.at(-1)![1])}
+          r={5}
+          className="fill-chart-1"
+        />
+      </svg>
+    </div>
   );
 };
 

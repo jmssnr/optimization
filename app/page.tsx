@@ -28,14 +28,9 @@ export default function Home() {
     <main className="w-screen h-screen grid place-content-center">
       <div className="flex flex-col gap-2">
         <div className="flex gap-5 items-center">
-          <div className="flex gap-2">
-            <Button size={"icon"} onClick={() => reset()}>
-              <RotateCcw />
-            </Button>
-            <Button size={"icon"} onClick={() => setPause(!pause)}>
-              {pause ? <PlayIcon /> : <PauseIcon />}
-            </Button>
-          </div>
+          <Button size={"icon"} onClick={() => setPause(!pause)}>
+            {pause ? <PlayIcon /> : <PauseIcon />}
+          </Button>
           <p>Iteration</p>
           <p className="text-secondary">{iteration}</p>
         </div>

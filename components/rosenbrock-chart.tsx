@@ -68,7 +68,7 @@ const RosenbrockChart = (props: {
         cx={xScale(x.at(0)![0])}
         cy={yScale(x.at(0)![1])}
         r={8}
-        className="fill-amber-900 stroke-amber-400"
+        className="fill-transparent stroke-amber-500"
         fillOpacity={0.7}
       />
       <circle

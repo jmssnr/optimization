@@ -4,7 +4,7 @@ export const useAnimation = <T>(
   initialState: T,
   callback: (previousState: T, initialState?: T) => T,
   isPaused: boolean = false
-): { state: T; frameTime: number } => {
+): { state: T; frameTime: number; iteration: number } => {
   const [state, setState] = useState<T>(initialState);
   const [iteration, setIteration] = useState(0);
   const [frameTime, setFrameTime] = useState(0);
@@ -15,6 +15,7 @@ export const useAnimation = <T>(
     const frame = (time: number) => {
       setState(callback);
       setFrameTime(time);
+      setIteration((prev) => prev + 1);
       frameId = requestAnimationFrame(frame);
     };
 
@@ -25,5 +26,5 @@ export const useAnimation = <T>(
     };
   }, [isPaused]);
 
-  return { state, frameTime };
+  return { state, frameTime, iteration };
 };

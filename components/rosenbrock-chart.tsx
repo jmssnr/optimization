@@ -11,8 +11,10 @@ const RosenbrockChart = (props: {
   width: number;
   height: number;
   x: number[][];
+  handleChangeInitial: (x: number, y: number) => void;
+  handleMoveInitial: (x: number, y: number) => void;
 }) => {
-  const { width, height, x } = props;
+  const { width, height, x, handleChangeInitial, handleMoveInitial } = props;
   const xScale = scaleLinear().domain([-5, 5]).range([0, width]);
   const yScale = scaleLinear().domain([-5, 5]).range([height, 0]);
 
@@ -27,19 +29,38 @@ const RosenbrockChart = (props: {
     .x((d, i) => xScale(d[0]))
     .y((d) => yScale(d[1]));
   return (
-    <svg width={width} height={height} className="border rounded-md">
+    <svg
+      width={width}
+      height={height}
+      className="border rounded-md"
+      onMouseMove={(event) => {
+        const { left, top } = event.currentTarget.getBoundingClientRect();
+        const x = xScale.invert(event.clientX - left);
+        const y = yScale.invert(event.clientY - top);
+        handleMoveInitial(x, y);
+      }}
+      onClick={(event) => {
+        const { left, top } = event.currentTarget.getBoundingClientRect();
+        const x = xScale.invert(event.clientX - left);
+        const y = yScale.invert(event.clientY - top);
+        handleChangeInitial(x, y);
+      }}
+    >
       <ObjectiveContour
         xScale={xScale}
         yScale={yScale}
         colorScale={colorScale}
         fun={rosenbrock}
       />
-      <path d={path(x) ?? ""} className={"fill-none stroke-blue-500 "} />
+      <path
+        d={path(x) ?? ""}
+        className={"fill-none stroke-amber-500 stroke-2 opacity-40"}
+      />
       <circle
         cx={xScale(x.at(-1)![0])}
         cy={yScale(x.at(-1)![1])}
-        r={5}
-        className="fill-blue-500 stroke-blue-700"
+        r={8}
+        className="fill-amber-500 stroke-amber-700"
       />
     </svg>
   );

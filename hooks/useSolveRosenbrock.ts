@@ -8,7 +8,7 @@ export const useSolveRosenbrock = (initial: number[], pause: boolean) => {
   const x0 = initial.map((x) => new Var(x));
 
   const grad = gradient(rosenbrock);
-  const { state, iteration } = useAnimation(
+  const { state, iteration, reset } = useAnimation(
     [x0],
     (x) => {
       const next = gradientDescent(rosenbrock, grad, x.at(-1)!);
@@ -19,5 +19,5 @@ export const useSolveRosenbrock = (initial: number[], pause: boolean) => {
 
   const x = state.map((v) => v.map((vv) => vv.value));
 
-  return { x, iteration };
+  return { x, iteration, reset };
 };

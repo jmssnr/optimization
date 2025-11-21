@@ -1,6 +1,6 @@
-import { gradient } from "@/core/gradient";
 import { gradientDescent } from "@/core/gradient-descent";
 import { rosenbrock } from "@/core/test-functions/rosenbrock";
+import { gradient } from "@/core/utils";
 import { Var } from "@/core/variable";
 import { useAnimation } from "@/hooks/useAnimate";
 

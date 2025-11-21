@@ -1,4 +1,5 @@
 import { ScalarFn } from "@/core/types";
+import { add, dot } from "@/core/utils";
 import { Var } from "@/core/variable";
 
 export const lineSearch = (
@@ -12,13 +13,6 @@ export const lineSearch = (
 ) => {
   const y = fun(x).value;
   const g = grad(x);
-
-  const add = (a: Var[], b: number[], c: number) => {
-    return a.map((v, i) => new Var(v.value + c * b[i]));
-  };
-
-  const dot = (a: number[], b: number[]) =>
-    a.reduce((s, v, i) => s + v * b[i], 0);
 
   while (true) {
     const xNext = add(x, direction, alpha);

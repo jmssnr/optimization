@@ -1,0 +1,21 @@
+import { gradient } from "@/core/gradient";
+import { gradientDescent } from "@/core/gradient-descent";
+import { rosenbrock } from "@/core/test-functions/rosenbrock";
+import { Var } from "@/core/variable";
+import { useAnimation } from "@/hooks/useAnimate";
+
+export const useSolveRosenbrock = (initial: number[], pause: boolean) => {
+  const x0 = initial.map((x) => new Var(x));
+
+  const grad = gradient(rosenbrock);
+  const { state } = useAnimation(
+    [x0],
+    (x) => {
+      const next = gradientDescent(rosenbrock, grad, x.at(-1)!);
+      return [...x, next];
+    },
+    pause
+  );
+
+  return state.map((v) => v.map((vv) => vv.value));
+};

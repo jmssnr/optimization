@@ -7,17 +7,16 @@ import { extent, range } from "d3-array";
 import { scaleLinear, scaleSequentialLog } from "d3-scale";
 import { interpolateYlGnBu } from "d3-scale-chromatic";
 import { line } from "d3-shape";
+import { useState } from "react";
 
-const RosenbrockChart = (props: {
+const ContourChart = (props: {
   width: number;
   height: number;
   x: number[][];
-  initial: number[];
-  handleChangeInitial: (x: number, y: number) => void;
-  handleMoveInitial: (x: number, y: number) => void;
+  handleUpdateInitial: (x: Var[]) => void;
 }) => {
-  const { width, height, x, initial, handleChangeInitial, handleMoveInitial } =
-    props;
+  const { width, height, x, handleUpdateInitial } = props;
+  const [hover, setHover] = useState<null | { x: number; y: number }>(null);
   const xScale = scaleLinear().domain([-5, 5]).range([0, width]);
   const yScale = scaleLinear().domain([-5, 5]).range([height, 0]);
 
@@ -38,17 +37,26 @@ const RosenbrockChart = (props: {
         width={width}
         height={height}
         className="border rounded-md"
+        onMouseEnter={(event) => {
+          const { left, top } = event.currentTarget.getBoundingClientRect();
+          const x = event.clientX - left;
+          const y = event.clientY - top;
+          setHover({ x, y });
+        }}
+        onMouseLeave={(event) => {
+          setHover(null);
+        }}
         onMouseMove={(event) => {
           const { left, top } = event.currentTarget.getBoundingClientRect();
-          const x = xScale.invert(event.clientX - left);
-          const y = yScale.invert(event.clientY - top);
-          handleMoveInitial(x, y);
+          const x = event.clientX - left;
+          const y = event.clientY - top;
+          setHover({ x, y });
         }}
         onClick={(event) => {
           const { left, top } = event.currentTarget.getBoundingClientRect();
           const x = xScale.invert(event.clientX - left);
           const y = yScale.invert(event.clientY - top);
-          handleChangeInitial(x, y);
+          handleUpdateInitial([new Var(x), new Var(y)]);
         }}
       >
         <ObjectiveContour
@@ -61,12 +69,7 @@ const RosenbrockChart = (props: {
           d={path(x) ?? ""}
           className={"fill-none stroke-chart-1 stroke-2 opacity-40"}
         />
-        <circle
-          cx={xScale(initial[0])}
-          cy={yScale(initial[1])}
-          r={8}
-          className="fill-neutral-500 stroke-neutral-700 opacity-20"
-        />
+
         <circle
           cx={xScale(1)}
           cy={yScale(1)}
@@ -82,6 +85,15 @@ const RosenbrockChart = (props: {
           fillOpacity={0.7}
         />
 
+        {hover !== null && (
+          <circle
+            cx={hover.x}
+            cy={hover.y}
+            r={10}
+            fillOpacity={0.5}
+            className="fill-chart-4 stroke-chart-4"
+          />
+        )}
         <circle
           cx={xScale(x.at(-1)![0])}
           cy={yScale(x.at(-1)![1])}
@@ -100,4 +112,4 @@ const RosenbrockChart = (props: {
   );
 };
 
-export default RosenbrockChart;
+export default ContourChart;

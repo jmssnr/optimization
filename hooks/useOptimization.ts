@@ -14,9 +14,8 @@ export const useOptimization = <T>(
     if (isPaused) return;
     let frameId: number;
     const frame = (time: number) => {
-      setState((prev) => callback(prev, frameId));
-      setFrameTime(time);
       frameId = requestAnimationFrame(frame);
+      setState((prev) => callback(prev, frameId));
     };
 
     frameId = requestAnimationFrame(frame);

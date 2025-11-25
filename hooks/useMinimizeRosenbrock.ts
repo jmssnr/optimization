@@ -1,6 +1,6 @@
 import { gradientDescent } from "@/core/gradient-descent";
 import { rosenbrock } from "@/core/test-functions/rosenbrock";
-import { gradient } from "@/core/utils";
+import { gradient, normalize } from "@/core/utils";
 import { Var } from "@/core/variable";
 import { useOptimization } from "@/hooks/useOptimization";
 
@@ -13,14 +13,18 @@ export const useMinimizeRosenbrock = (pause?: boolean) => {
       fun: rosenbrock([new Var(-4), new Var(-4)]),
       gradNorm: Math.hypot(...grad([new Var(-4), new Var(-4)])),
       status: "iterating",
+      searchDirection: normalize(
+        grad([new Var(-4), new Var(-4)]).map((v) => -1 * v)
+      ),
     },
   ];
 
-  const { state, reset, frameTime } = useOptimization(
+  const { state, reset, frameTime, history } = useOptimization(
     initial,
     (x, frameId) => {
       const previousStep = x.at(-1)!;
 
+      const direction = normalize(grad(previousStep.x).map((v) => -1 * v));
       const nextIter = previousStep.iter + 1;
       const xNext = gradientDescent(rosenbrock, grad, previousStep.x);
       const funNext = rosenbrock(xNext);
@@ -37,6 +41,7 @@ export const useMinimizeRosenbrock = (pause?: boolean) => {
             fun: funNext,
             gradNorm: gradNext,
             status: "max",
+            searchDirection: direction,
           },
         ];
       }
@@ -51,6 +56,7 @@ export const useMinimizeRosenbrock = (pause?: boolean) => {
             fun: funNext,
             gradNorm: gradNext,
             status: "success",
+            searchDirection: direction,
           },
         ];
       }
@@ -63,6 +69,7 @@ export const useMinimizeRosenbrock = (pause?: boolean) => {
           fun: funNext,
           gradNorm: gradNext,
           status: "iterating",
+          searchDirection: direction,
         },
       ];
     },
@@ -77,5 +84,6 @@ export const useMinimizeRosenbrock = (pause?: boolean) => {
     })),
     reset,
     frameTime,
+    history,
   };
 };

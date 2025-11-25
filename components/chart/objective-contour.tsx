@@ -33,7 +33,7 @@ const ObjectiveContour = (props: {
     }
   }
 
-  const thresholds = range(1, 10).map((i) => Math.pow(2, i));
+  const thresholds = range(1, 20).map((i) => Math.pow(2, i));
 
   const contour = contours()
     .size([n, m])
@@ -50,15 +50,26 @@ const ObjectiveContour = (props: {
       };
     });
 
-  return contour.map((line, i) => (
-    <path
-      key={`contour-line-${i}`}
-      d={geoPath()(line) || ""}
-      stroke={colorScale(line.value)}
-      fill={colorScale(line.value)}
-      fillOpacity={0.01}
-    />
-  ));
+  return (
+    <g>
+      <rect
+        width={innerWidth}
+        height={innerHeight}
+        fill="white"
+        fillOpacity={0.5}
+      />
+      {contour.map((line, i) => (
+        <path
+          key={`contour-line-${i}`}
+          d={geoPath()(line) || ""}
+          stroke={colorScale(line.value)}
+          fill={colorScale(line.value)}
+          fillOpacity={0.5}
+          opacity={0.5}
+        />
+      ))}
+    </g>
+  );
 };
 
 export default ObjectiveContour;

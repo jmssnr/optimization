@@ -36,7 +36,6 @@ const ContourChart = (props: {
       <svg
         width={width}
         height={height}
-        className="border rounded-md"
         onMouseEnter={(event) => {
           const { left, top } = event.currentTarget.getBoundingClientRect();
           const x = event.clientX - left;
@@ -86,13 +85,29 @@ const ContourChart = (props: {
         />
 
         {hover !== null && (
-          <circle
-            cx={hover.x}
-            cy={hover.y}
-            r={10}
-            fillOpacity={0.5}
-            className="fill-chart-4 stroke-chart-4"
-          />
+          <g>
+            <circle
+              cx={hover.x}
+              cy={hover.y}
+              r={4}
+              className="fill-neutral-600"
+            />
+            <line
+              x1={xScale(-5)}
+              x2={xScale(5)}
+              y1={hover.y}
+              y2={hover.y}
+              className="stroke-neutral-600"
+            />
+
+            <line
+              x1={hover.x}
+              x2={hover.x}
+              y1={yScale(-5)}
+              y2={yScale(5)}
+              className="stroke-neutral-600"
+            />
+          </g>
         )}
         <circle
           cx={xScale(x.at(-1)![0])}
@@ -107,6 +122,24 @@ const ContourChart = (props: {
           r={5}
           className="fill-chart-1"
         />
+        <rect
+          rx={3}
+          width={65}
+          height={17}
+          x={xScale(x.at(-1)![0]) + 12}
+          y={yScale(x.at(-1)![1]) + 3}
+          fillOpacity={0.6}
+          className="fill-chart-1 text-xs stroke-chart-1"
+        />
+        <text
+          dx={15}
+          dy={15}
+          x={xScale(x.at(-1)![0])}
+          y={yScale(x.at(-1)![1])}
+          className="fill-white text-xs"
+        >
+          {`(${x.at(-1)![0].toFixed(2)},${x.at(-1)![1].toFixed(2)})`}
+        </text>
       </svg>
     </div>
   );

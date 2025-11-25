@@ -5,8 +5,14 @@ export const useOptimization = <T>(
   initialState: T,
   callback: (previousState: T, frameId: number) => T,
   isPaused: boolean = false
-): { state: T; frameTime: number; reset: (newInitial?: T) => void } => {
+): {
+  history: T[];
+  state: T;
+  frameTime: number;
+  reset: (newInitial?: T) => void;
+} => {
   const [state, setState] = useState<T>(initialState);
+  const [history, setHistory] = useState<T[]>([]);
   const [isReset, setIsReset] = useState(false);
   const [frameTime, setFrameTime] = useState(0);
 
@@ -30,8 +36,9 @@ export const useOptimization = <T>(
 
   const reset = (newInitial?: T) => {
     setIsReset(true);
-    setState(() => newInitial ?? initialState);
+    setHistory([...history, state]);
+    setState(() => newInitial ?? history.at(-1)!);
   };
 
-  return { state, frameTime, reset };
+  return { state, frameTime, reset, history };
 };
